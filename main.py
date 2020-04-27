@@ -6,6 +6,10 @@ ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 NOT_CHANGE = [' ','.',',', 1,2,3,4,5,6,7,8,9,0,'1','2','3','4','5','6','7','8','9','0',]
 token = 'd4eadd99f7aeac8b8e3abaf1494f3b5a0c1e7fb2'
 
+def request():
+    request = r.get('https://api.codenation.dev/v1/challenge/dev-ps/generate-data?token=%s' % (token))
+    return request.json()
+
 def decrypt(key, message):
     m = ''
     str(message).islower()
@@ -17,7 +21,7 @@ def decrypt(key, message):
             m += ALPHABET[c_index - key]
     return str(m)
 
-def encript(decripted):
+def encrypt(decripted):
     return hashlib.sha1(decripted.encode('utf-8')).hexdigest()
 
 def send(resp):
@@ -29,11 +33,9 @@ def send(resp):
     response = r.post('https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token=%s' % token, files=file)
     return print(response.status_code)
 
-request = r.get('https://api.codenation.dev/v1/challenge/dev-ps/generate-data?token=%s' % (token))
-
-request_json = request.json()
+request_json = request()
 decripted = decrypt(request_json['numero_casas'],request_json['cifrado'])
-encripted_sha1 = encript(decripted)
+encripted_sha1 = encrypt(decripted)
 
 json_resp = {
     "numero_casas": request_json['numero_casas'],
@@ -44,6 +46,3 @@ json_resp = {
 }
 
 send(json_resp)
-
-
-
