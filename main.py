@@ -37,12 +37,7 @@ request_json = request()
 decripted = decrypt(request_json['numero_casas'],request_json['cifrado'])
 encripted_sha1 = encrypt(decripted)
 
-json_resp = {
-    "numero_casas": request_json['numero_casas'],
-	"token": token,
-	"cifrado": request_json['cifrado'],
-	"decifrado": decripted,
-	"resumo_criptografico": encripted_sha1
-}
+request_json['decifrado'] = decripted
+request_json['resumo_criptografico'] = encripted_sha1
 
-send(json_resp)
+send(request_json)
